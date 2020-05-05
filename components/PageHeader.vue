@@ -1,10 +1,11 @@
 <template>
   <header class="header">
     <section class="top-bar">
-      <h2 class="visually-hidden">
-        Top bar
-      </h2>
-      <span class="top-bar__info">special deals <a class="top-bar__link" href="/">link</a></span>
+      <h2 class="visually-hidden">Top bar</h2>
+      <span class="top-bar__info">
+        special deals
+        <a class="top-bar__link" href="/">link</a>
+      </span>
       <ul class="top-links">
         <li class="top-links__item">
           <a class="top-links__link">first</a>
@@ -22,15 +23,16 @@
     </section>
     <nav class="main-navigation">
       <div class="logo">
-        <a href="/"><img src="/logo.png" alt="ГдеМатериал.Ру"></a> <!--TODO(iNerV) do dynamically link-->
+        <a href="/">
+          <img src="/logo.png" alt="ГдеМатериал.Ру" />
+        </a>
+        <!--TODO(iNerV) do dynamically link-->
       </div>
       <div class="main-navigation__burger">
-        <button class="main-navigation__open-menu-btn">
-          Menu
-        </button>
+        <button class="main-navigation__open-menu-btn" @click="toggleVisibleMenu">Menu</button>
       </div>
       <div class="main-navigation__search">
-        <input class="main-navigation__input" type="search" placeholder="search">
+        <input class="main-navigation__input" type="search" placeholder="search" />
       </div>
       <ul class="user-box">
         <li class="user-box__item">
@@ -41,62 +43,41 @@
         </li>
       </ul>
     </nav>
-    <ul class="site-navigation">
-      <li class="site-navigation__item">
-        <a class="site-navigation__link" href="/">Category</a>
-      </li>
-      <li class="site-navigation__item">
-        <a class="site-navigation__link" href="/">Category2</a>
-      </li>
-      <li class="site-navigation__item">
-        <a class="site-navigation__link" href="/">Category3</a>
-      </li>
-      <li class="site-navigation__item">
-        <a class="site-navigation__link" href="/">Category4</a>
-      </li>
-      <li class="site-navigation__item">
-        <a class="site-navigation__link" href="/">Category5</a>
-      </li>
-      <li class="site-navigation__item">
-        <a class="site-navigation__link" href="/">Category6</a>
-      </li>
-      <li class="site-navigation__item">
-        <a class="site-navigation__link" href="/">Category7</a>
-      </li>
-      <li class="site-navigation__item">
-        <a class="site-navigation__link" href="/">Category8</a>
-      </li>
-      <li class="site-navigation__item">
-        <a class="site-navigation__link" href="/">Category9</a>
-      </li>
-      <li class="site-navigation__item">
-        <a class="site-navigation__link" href="/">Category10</a>
-      </li>
-      <li class="site-navigation__item">
-        <a class="site-navigation__link" href="/">Category11</a>
-      </li>
-      <li class="site-navigation__item">
-        <a class="site-navigation__link" href="/">Category12</a>
-      </li>
-      <li class="site-navigation__item">
-        <a class="site-navigation__link" href="/">Category13</a>
-      </li>
-      <li class="site-navigation__item">
-        <a class="site-navigation__link" href="/">Category14</a>
-      </li>
-      <li class="site-navigation__item">
-        <a class="site-navigation__link" href="/">Category15</a>
-      </li>
-      <li class="site-navigation__item">
-        <a class="site-navigation__link" href="/">Category16</a>
-      </li>
-    </ul>
+    <Menu v-if="isVisibleMenu" />
   </header>
 </template>
 
 <script>
+import Menu from "./Menu/index.vue";
+
+import { mapMutations, mapState } from "vuex";
 export default {
-  name: 'PageHeader',
+  name: "PageHeader",
+  components: {
+    Menu
+  },
+  computed: {
+    ...mapState({
+      isVisibleMenu: state => state.the_menu.menu_is_visible
+    })
+  },
+  methods: {
+    ...mapMutations({
+      toggleVisibleMenu: "the_menu/TOGGLE_VISIBLE_MENU"
+    }),
+    togglePageOverflow(prop) {
+      document.querySelector("html").style.overflow = prop;
+    }
+  },
+  watch: {
+    isVisibleMenu(isMenuOpen) {
+      if (isMenuOpen) {
+        this.togglePageOverflow("hidden");
+      } else {
+        this.togglePageOverflow("auto");
+      }
+    }
+  }
 };
 </script>
 
@@ -108,10 +89,10 @@ export default {
   justify-content: space-between;
   background-color: rgb(96, 4, 186);
   color: rgb(255, 255, 255);
-  font-size: .875rem;
+  font-size: 0.875rem;
   font-weight: 600;
   line-height: 19px;
-  padding: .25rem 1rem;
+  padding: 0.25rem 1rem;
   z-index: 2;
 
   &__info {
@@ -131,7 +112,7 @@ export default {
     display: flex;
     padding: 0;
     list-style-type: none;
-    font-size: .875rem;
+    font-size: 0.875rem;
     line-height: 19px;
   }
 
@@ -169,7 +150,7 @@ export default {
 
   &__open-menu-btn {
     background: transparent;
-    padding: .5rem 1.5rem;
+    padding: 0.5rem 1.5rem;
     display: inline-block;
     border: 1px solid rgb(255, 255, 255);
     border-radius: 2px;
@@ -188,7 +169,7 @@ export default {
     height: 38px;
     text-align: left;
     overflow: hidden;
-    padding: .45rem 1.5rem .45rem .5rem;
+    padding: 0.45rem 1.5rem 0.45rem 0.5rem;
     line-height: 24px;
   }
 }
@@ -202,86 +183,12 @@ export default {
     display: flex;
     padding: 0;
     list-style-type: none;
-    font-size: .875rem;
+    font-size: 0.875rem;
     line-height: 19px;
   }
 
   &__item:not(:first-child) {
     margin-left: 15px;
-  }
-}
-
-.site-navigation {
-  display: flex;
-  flex-direction: column;
-  grid-area: site-navigation;
-  list-style-type: none;
-  width: 100%;
-  height: calc(100vh - 153px);
-  background: rgb(255, 255, 255);
-  overflow-y: scroll;
-  z-index: 1;
-  padding-left: 0;
-  display: none;
-
-  &__item {
-    display: block;
-    width: 100%;
-    height: 47px;
-    position: relative;
-    color: #333;
-    padding: .75rem 1rem;
-
-    &:hover,
-    &:active {
-      background-color: rgb(130, 0, 255);
-      color: rgb(255, 255, 255);
-    }
-  }
-
-  &__grid {
-    display: grid;
-    grid-template-rows: 90px 90px;
-    grid-template-columns: 1fr 1fr;
-    align-items: center;
-    list-style-type: none;
-    padding: 0;
-  }
-
-  &__grid-item {
-    display: flex;
-    align-items: center;
-    position: relative;
-    height: 100%;
-    text-align: center;
-    color: rgb(130, 0, 255);
-    border-right: 1px solid #ccc;
-    border-bottom: 1px solid #ccc;
-  }
-
-  &__link {
-    display: block;
-    width: 100%;
-    color: inherit;
-
-    &:hover,
-    &:active {
-      color: rgb(255, 255, 255);
-    }
-
-    &--special {
-      display: flex;
-      align-items: center;
-      position: absolute;
-      padding-left: 50%;
-      left: -10%;
-      height: 100%;
-
-      &:hover,
-      &:active {
-        color: inherit;
-      }
-    }
   }
 }
 </style>
